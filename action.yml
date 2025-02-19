@@ -70,13 +70,26 @@ runs:
           const existingComment = comments.find(c => c.body.includes(uniqueMarker));
           if (existingComment) {
             core.setOutput("result", existingComment.id);
+          } else {
+            core.setOutput("result", "");
           }
             
-    - name: Create or Update PR Comment
+    - name: Create PR Comment
+      if: steps.get_comment.outputs.result == ""
       id: comment
       uses: peter-evans/create-or-update-comment@v2
       with:
         token: ${{ inputs.github_token }}
         issue-number: ${{ github.event.pull_request.number }}
-        comment-id: ${{ steps.get_comment.outputs.result }}
+        body: ${{ steps.run_script.outputs.script_output }}
+
+    - name: Update PR Comment
+      if: steps.get_comment.outputs.result != ""
+      id: comment
+      uses: peter-evans/create-or-update-comment@v2
+      with:
+        token: ${{ inputs.github_token }}
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-id: ${{steps.get_comment.outputs.result}}
+        edit-mode: replace
         body: ${{ steps.run_script.outputs.script_output }}

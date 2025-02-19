@@ -109,7 +109,7 @@ class MarkdownRAG:
         prompt_template = PromptTemplate(
             template="""
             You have been provided the description of a change, and the git diff an engineer has requested to be merged. Do we have existing documentation for this? We create ADRs for technical decisions is this required for this change?
-            Consider the time efficiency when suggesting to write a ADR. Only suggest writing and ADR if the change is significant and spending time documenting is worth it.
+            Consider the time efficiency when suggesting to write a ADR. Only suggest writing and ADR if the change is significant and spending time documenting is worth it. If an existing ADR can just be updated suggest that instead.
             If its worth creating an ADR suggest some positive & negative consequences of the decision and trade-offs.
             Keep it consise - so its a quick read.
             Change: {question}
