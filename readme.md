@@ -1,4 +1,4 @@
-# AskSteve
+# AskSteveAboutDocs
 
 **AskSteve** is a tool that performs architectural analysis using large language models (LLMs) by checking your documentation for possible gaps and areas of improvement.
 
