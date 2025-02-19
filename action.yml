@@ -48,6 +48,6 @@ runs:
       id: comment
       uses: peter-evans/create-or-update-comment@v2
       with:
-        token: ${{ input.github_token }}
+        token: ${{ inputs.github_token }}
         issue-number: ${{ github.event.pull_request.number }}
         body: ${{ steps.run_script.outputs.script_output }}
