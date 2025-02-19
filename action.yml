@@ -21,13 +21,6 @@ runs:
       uses: actions/setup-python@v4
       with:
         python-version: "3.x"
-
-    - name: Is it cached?
-      id: cache-pip
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip
     - name: Install
       shell: bash
       run: |
