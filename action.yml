@@ -75,7 +75,7 @@ runs:
           }
             
     - name: Create PR Comment
-      if: steps.get_comment.outputs.result == ""
+      if: steps.get_comment.outputs.result == ''
       id: comment
       uses: peter-evans/create-or-update-comment@v2
       with:
@@ -84,8 +84,8 @@ runs:
         body: ${{ steps.run_script.outputs.script_output }}
 
     - name: Update PR Comment
-      if: steps.get_comment.outputs.result != ""
-      id: comment
+      if: steps.get_comment.outputs.result != ''
+      id: update
       uses: peter-evans/create-or-update-comment@v2
       with:
         token: ${{ inputs.github_token }}
