@@ -24,6 +24,8 @@ runs:
     - uses: actions/checkout@v4
       with:
         repository: 'dev-ben-nisien/Steve'
+        path: ./Steve
+        clean: false
     - name: Is it cached?
       id: cache-pip
       uses: actions/cache@v4
@@ -34,12 +36,12 @@ runs:
       shell: bash
       run: |
         pip install --upgrade pip setuptools wheel
-        pip install -r requirements.txt
+        pip install -r ./Steve/requirements.txt
     - name: Do stuff
       id: run_script
       shell: bash
       run: |
-          OUTPUT=$(git diff origin/main -- | python "main.py")
+          OUTPUT=$(git diff origin/main -- | python "./Steve/main.py")
           echo "script_output<<EOF" >> "$GITHUB_OUTPUT"
           echo "$OUTPUT" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
