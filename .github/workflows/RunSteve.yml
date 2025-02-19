@@ -16,4 +16,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           openai_api_token: ${{ secrets.OPENAI_API_TOKEN }}
-          docs_path: "docs/"
+          docs_path: "./"
