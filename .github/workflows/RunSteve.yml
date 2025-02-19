@@ -1,0 +1,28 @@
+name: "Run Steve Action on PR"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+  checks: write
+  packages: write
+
+jobs:
+  AskSteve:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
+
+      - name: Run Steve Action
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          openai_api_token: ${{ secrets.OPENAI_API_TOKEN }}
+          docs_path: "./example"

@@ -6,3 +6,4 @@ faiss-cpu
 python-dotenv
 unstructured
 markdown
+numpy

@@ -77,7 +77,6 @@ class MarkdownRAG:
             documents,
             self.embeddings
         )
-        print("Index created in memory")
     def describe(self, prompt: str, system_prompt: str = None, temperature: float = None) -> str:
         llm = self.llm if temperature is None else ChatOpenAI(
             model_name=self.llm.model_name,
@@ -110,7 +109,9 @@ class MarkdownRAG:
         prompt_template = PromptTemplate(
             template="""
             You have been provided the description of a change, and the git diff an engineer has requested to be merged. Do we have existing documentation for this? We create ADRs for technical decisions is this required for this change?
-            If its worth creating an ADR suggest some positive & negative consequences of the decision and trade-offs vs other techniques also suggest the priority of writing this ADR given the potential existence of similar ADRs
+            Consider the time efficiency when suggesting to write a ADR. Only suggest writing and ADR if the change is significant and spending time documenting is worth it.
+            If its worth creating an ADR suggest some positive & negative consequences of the decision and trade-offs.
+            Keep it consise - so its a quick read.
             Change: {question}
 
             Context: {context}
@@ -157,10 +158,15 @@ def main():
     # Example query
     diff = sys.stdin.read()
     description = rag.describe(diff)
-    print(description)
-    print("Does the engineer need to document?")
     answer = rag.query(f"Description: {description} Diff: {diff}")
-    print(answer["answer"])
+    output = []
+    output.append("# Steve:\n")
+    output.append(f"{answer['answer']}")
+    output.append("\n## Existing Related Documentation:")
+    for doc in answer["sources"]:
+            source_label = doc.get("source", "Unknown")
+            output.append(f"\n- **{source_label}**")
+    print("".join(output))
 
 if __name__ == "__main__":
     main()

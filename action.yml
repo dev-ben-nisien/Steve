@@ -21,34 +21,33 @@ runs:
       uses: actions/setup-python@v4
       with:
         python-version: "3.x"
-
+    - name: Is it cached?
+      id: cache-pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip
+    - name: Install
+      shell: bash
+      run: |
+        pip install --upgrade pip setuptools wheel
+        pip install -r requirements.txt
     - name: Do stuff
       id: run_script
       shell: bash
       run: |
-        pip install -r requirements.txt
-        OUTPUT=$(python "main.py")
-        echo "script_output=${OUTPUT}" >> "$GITHUB_OUTPUT"
+          OUTPUT=$(git diff origin/main -- | python "main.py")
+          echo "script_output<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$OUTPUT" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
       env:
         OPENAI_API_KEY: ${{ inputs.openai_api_token }}
         DOCS_PATH: ${{ inputs.docs_path }}
 
-    - name: Make comment
-      if: ${{ github.event_name == 'pull_request' }}
-      uses: actions/github-script@v6
+    - name: Create or Update PR Comment
+      id: comment
+      uses: peter-evans/create-or-update-comment@v2
       with:
-        github-token: ${{ inputs.github_token }}
-        script: |
-          const commentBody = `
-          Script Output:
-          \`\`\`
-          ${process.env.script_output}
-          \`\`\``;
-          
-          const prNumber = context.issue.number;
-          await github.rest.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: prNumber,
-            body: commentBody,
-          });
+        token: ${{ inputs.github_token }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: ${{ steps.run_script.outputs.script_output }}
