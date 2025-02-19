@@ -1,0 +1,54 @@
+name: "Steve"
+description: "Does some architectural analysis using LLMs and says if your docs are lacking"
+author: "BF"
+branding:
+  icon: "rocket"
+  color: "blue"
+inputs:
+  github_token:
+    type: string
+    required: true
+  openai_api_token:
+    type: string
+    required: true
+  docs_path:
+    type: string
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Set up things
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.x"
+
+    - name: Do stuff
+      id: run_script
+      shell: bash
+      run: |
+        pip install -r requirements.txt
+        OUTPUT=$(python "main.py")
+        echo "script_output=${OUTPUT}" >> "$GITHUB_OUTPUT"
+      env:
+        OPENAI_API_KEY: ${{ inputs.openai_api_token }}
+        DOCS_PATH: ${{ inputs.docs_path }}
+
+    - name: Make comment
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ inputs.github_token }}
+        script: |
+          const commentBody = `
+          Script Output:
+          \`\`\`
+          ${process.env.script_output}
+          \`\`\``;
+          
+          const prNumber = context.issue.number;
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: prNumber,
+            body: commentBody,
+          });
