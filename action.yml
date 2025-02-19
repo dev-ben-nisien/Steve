@@ -90,6 +90,6 @@ runs:
       with:
         token: ${{ inputs.github_token }}
         issue-number: ${{ github.event.pull_request.number }}
-        comment-id: ${{steps.get_comment.outputs.commentId}
+        comment-id: ${{steps.get_comment.outputs.commentId}}
         edit-mode: replace
         body: ${{ steps.run_script.outputs.script_output }}
