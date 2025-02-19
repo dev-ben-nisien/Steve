@@ -75,17 +75,7 @@ runs:
           }
             
     - name: Create PR Comment
-      if: steps.get_comment.outputs.commendId == ''
       id: comment
-      uses: peter-evans/create-or-update-comment@v2
-      with:
-        token: ${{ inputs.github_token }}
-        issue-number: ${{ github.event.pull_request.number }}
-        body: ${{ steps.run_script.outputs.script_output }}
-
-    - name: Update PR Comment
-      if: steps.get_comment.outputs.commentId != ''
-      id: update
       uses: peter-evans/create-or-update-comment@v2
       with:
         token: ${{ inputs.github_token }}
