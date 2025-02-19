@@ -46,19 +46,10 @@ runs:
         OPENAI_API_KEY: ${{ inputs.openai_api_token }}
         DOCS_PATH: ${{ inputs.docs_path }}
 
-    - name: Make comment
-      if: ${{ github.event_name == 'pull_request' }}
-      uses: actions/github-script@v6
-      env:
-        COMMENT_BODY: ${{ steps.run_script.outputs.script_output }}
-      with:
-        github-token: ${{ inputs.github_token }}
-        script: |
-          const commentBody = process.env.COMMENT_BODY;
-          
-          await github.rest.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            issue_number: context.issue.number,
-            body: commentBody,
-          });
+    - name: Create or Update PR Comment
+            id: comment
+            uses: peter-evans/create-or-update-comment@v2
+            with:
+              token: ${{ secrets.GITHUB_TOKEN }}
+              issue-number: ${{ github.event.pull_request.number }}
+              body: ${{ steps.run_script.outputs.script_output }}
