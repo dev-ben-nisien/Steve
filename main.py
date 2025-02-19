@@ -77,7 +77,6 @@ class MarkdownRAG:
             documents,
             self.embeddings
         )
-        print("Index created in memory")
     def describe(self, prompt: str, system_prompt: str = None, temperature: float = None) -> str:
         llm = self.llm if temperature is None else ChatOpenAI(
             model_name=self.llm.model_name,
@@ -161,9 +160,9 @@ def main():
     description = rag.describe(diff)
     answer = rag.query(f"Description: {description} Diff: {diff}")
     output = []
-    output.append("#Steve:\n")
+    output.append("# Steve:\n")
     output.append(f"{answer['answer']}")
-    output.append("\n##Existing Related Documentation:")
+    output.append("\n## Existing Related Documentation:")
     for doc in answer["sources"]:
             source_label = doc.get("source", "Unknown")
             output.append(f"\n- **{source_label}**")
