@@ -161,12 +161,13 @@ def main():
     description = rag.describe(diff)
     answer = rag.query(f"Description: {description} Diff: {diff}")
     output = []
+    output.append("#Steve:\n")
     output.append(f"{answer['answer']}")
     output.append("\n##Existing Related Documentation:")
     for doc in answer["sources"]:
             source_label = doc.get("source", "Unknown")
             output.append(f"\n- **{source_label}**")
-    print("#Steve:\n".join(output))
+    print("".join(output))
 
 if __name__ == "__main__":
     main()
