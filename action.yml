@@ -26,6 +26,7 @@ runs:
       id: run_script
       shell: bash
       run: |
+        pip install --upgrade pip setuptools wheel
         pip install -r requirements.txt
         OUTPUT=$(git diff main | python "main.py")
         echo "script_output=${OUTPUT}" >> "$GITHUB_OUTPUT"
