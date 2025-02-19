@@ -22,12 +22,23 @@ runs:
       with:
         python-version: "3.x"
 
+    - name: Is it cached?
+      uses: actions/cache@v1
+      id: cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        pip install --upgrade pip setuptools wheel
+        pip install -r requirements.txt
     - name: Do stuff
       id: run_script
       shell: bash
       run: |
-        pip install --upgrade pip setuptools wheel
-        pip install -r requirements.txt
         OUTPUT=$(git diff orgin/main -- | python "main.py")
         echo "script_output=${OUTPUT}" >> "$GITHUB_OUTPUT"
       env:
