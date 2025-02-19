@@ -30,7 +30,7 @@ runs:
         key: ${{ runner.os }}-pip
     - name: Install
       shell: bash
-      if: steps.cache.outputs.cache-hit != 'true'
+      if: steps.cache-pip.outputs.cache-hit != 'true'
       run: |
         pip install --upgrade pip setuptools wheel
         pip install -r requirements.txt
@@ -52,11 +52,7 @@ runs:
       with:
         github-token: ${{ inputs.github_token }}
         script: |
-          const commentBody = `
-          Script Output:
-          \`\`\`
-          ${process.env.script_output}
-          \`\`\``;
+          const commentBody = `${{ steps.run_script.outputs.script_output }}`;
           
           const prNumber = context.issue.number;
           await github.rest.issues.createComment({

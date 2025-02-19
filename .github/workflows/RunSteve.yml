@@ -3,6 +3,13 @@ name: "Run Steve Action on PR"
 on:
   pull_request:
     types: [opened, synchronize, reopened, closed]
+    
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+  checks: write
+  packages: write
 
 jobs:
   AskSteve:
