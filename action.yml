@@ -38,8 +38,10 @@ runs:
       id: run_script
       shell: bash
       run: |
-        OUTPUT=$(git diff origin/main -- | python "main.py")
-        echo "script_output=${OUTPUT}" >> "$GITHUB_OUTPUT"
+          OUTPUT=$(git diff origin/main -- | python "main.py")
+          echo "script_output<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$OUTPUT" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
       env:
         OPENAI_API_KEY: ${{ inputs.openai_api_token }}
         DOCS_PATH: ${{ inputs.docs_path }}
