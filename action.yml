@@ -31,6 +31,7 @@ runs:
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install
+      shell: bash
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
         pip install --upgrade pip setuptools wheel
