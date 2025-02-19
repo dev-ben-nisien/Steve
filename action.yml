@@ -30,7 +30,6 @@ runs:
     - name: Install
       shell: bash
       run: |
-        pip install --upgrade pip setuptools wheel
         pip install -r requirements.txt`
     - name: Do stuff
       id: run_script
