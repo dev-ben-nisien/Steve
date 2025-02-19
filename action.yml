@@ -52,7 +52,9 @@ runs:
       with:
         github-token: ${{ inputs.github_token }}
         script: |
-          const commentBody = `${{ steps.run_script.outputs.script_output }}`;
+          const commentBody = JSON.parse(
+              JSON.stringify(`${{ steps.run_script.outputs.script_output }}`)
+            );
           
           const prNumber = context.issue.number;
           await github.rest.issues.createComment({
