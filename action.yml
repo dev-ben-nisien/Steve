@@ -70,8 +70,6 @@ runs:
           const existingComment = comments.find(c => c.body.includes(uniqueMarker));
           if (existingComment) {
             core.setOutput("result", existingComment.id);
-          } else {
-            core.setOutput("result", "");
           }
             
     - name: Create or Update PR Comment
