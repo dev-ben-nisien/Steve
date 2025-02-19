@@ -157,10 +157,14 @@ def main():
     # Example query
     diff = sys.stdin.read()
     description = rag.describe(diff)
-    print(description)
-    print("Does the engineer need to document?")
     answer = rag.query(f"Description: {description} Diff: {diff}")
-    print(answer["answer"])
+    output = []
+    output.append(f"{answer['answer']}")
+    for doc in answer["sources"]:
+            source_label = doc.get("source", "Unknown")
+            page_content = doc.get("content", "No content")
+            output.append(f"\n- **{source_label}**: {page_content}")
+    print("".join(output))
 
 if __name__ == "__main__":
     main()

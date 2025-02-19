@@ -23,13 +23,11 @@ runs:
         python-version: "3.x"
 
     - name: Is it cached?
-      uses: actions/cache@v1
-      id: cache
+      id: cache-pip
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+        key: ${{ runner.os }}-pip
     - name: Install
       shell: bash
       if: steps.cache.outputs.cache-hit != 'true'
