@@ -21,6 +21,12 @@ runs:
       uses: actions/setup-python@v4
       with:
         python-version: "3.x"
+    - name: Is it cached?
+      id: cache-pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip
     - name: Install
       shell: bash
       run: |
@@ -39,9 +45,9 @@ runs:
         DOCS_PATH: ${{ inputs.docs_path }}
 
     - name: Create or Update PR Comment
-            id: comment
-            uses: peter-evans/create-or-update-comment@v2
-            with:
-              token: ${{ secrets.GITHUB_TOKEN }}
-              issue-number: ${{ github.event.pull_request.number }}
-              body: ${{ steps.run_script.outputs.script_output }}
+      id: comment
+      uses: peter-evans/create-or-update-comment@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: ${{ steps.run_script.outputs.script_output }}
