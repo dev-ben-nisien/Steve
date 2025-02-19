@@ -31,7 +31,7 @@ runs:
       shell: bash
       run: |
         pip install --upgrade pip setuptools wheel
-        pip install -r requirements.txt
+        pip install -r requirements.txt`
     - name: Do stuff
       id: run_script
       shell: bash
@@ -48,6 +48,6 @@ runs:
       id: comment
       uses: peter-evans/create-or-update-comment@v2
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ input.github_token }}
         issue-number: ${{ github.event.pull_request.number }}
         body: ${{ steps.run_script.outputs.script_output }}
