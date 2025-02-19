@@ -49,10 +49,36 @@ runs:
         OPENAI_API_KEY: ${{ inputs.openai_api_token }}
         DOCS_PATH: ${{ inputs.docs_path }}
 
+    - name: Get existing comment ID
+      id: get_comment
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const uniqueMarker = 'Steve';
+          const pr = context.payload.pull_request;
+          if (!pr) {
+            core.setFailed("No pull request found.");
+            return;
+          }
+          const prNumber = pr.number;
+          const { data: comments } =
+            await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber
+            });
+          const existingComment = comments.find(c => c.body.includes(uniqueMarker));
+          if (existingComment) {
+            core.setOutput("result", existingComment.id);
+          } else {
+            core.setOutput("result", "");
+          }
+            
     - name: Create or Update PR Comment
       id: comment
       uses: peter-evans/create-or-update-comment@v2
       with:
         token: ${{ inputs.github_token }}
         issue-number: ${{ github.event.pull_request.number }}
+        comment-id: ${{ steps.get_comment.outputs.result }}
         body: ${{ steps.run_script.outputs.script_output }}
