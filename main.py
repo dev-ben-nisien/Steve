@@ -108,14 +108,18 @@ class MarkdownRAG:
 
         prompt_template = PromptTemplate(
             template="""
-            You have been provided the description of a change, and the git diff an engineer has requested to be merged. Do we have existing documentation for this? We create ADRs for technical decisions is this required for this change?
-            Consider the time efficiency when suggesting to write a ADR. Only suggest writing and ADR if the change is significant and spending time documenting is worth it. If an existing ADR can just be updated suggest that instead.
+            You have been provided the description of a change, and the git diff from a PR an engineer has requested to be merged. Do we have existing documentation for this? We write ADRs for technical decisions, is the change significant enough to warrant this?
             If its worth creating an ADR suggest some positive & negative consequences of the decision and trade-offs.
-            Keep it consise - so its a quick read.
+
+            Important: Consider the time efficiency when suggesting to write a ADR. Only suggest writing and ADR if the change is significant and spending time documenting is worth it.
+            Important: If the git diff contains ADRs do not suggest creating a new one, review the added one(s) to identify gaps in logic.
+
             Change: {question}
 
             Context: {context}
             
+            Keep it consise - so its a very quick read.
+
             Answer:""",
             input_variables=["context", "question"],
         )
@@ -162,7 +166,7 @@ def main():
     output = []
     output.append("# Steve:\n")
     output.append(f"{answer['answer']}")
-    output.append("\n## Existing Related Documentation:")
+    output.append("\n## Referenced Documentation:")
     for doc in answer["sources"]:
             source_label = doc.get("source", "Unknown")
             output.append(f"\n- **{source_label}**")
