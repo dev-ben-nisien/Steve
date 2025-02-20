@@ -45,8 +45,8 @@ class MarkdownRAG:
         
         # Initialize LLM
         self.llm = ChatOpenAI(
-            model_name="gpt-4o-mini",
-            temperature=0.2,
+            model_name="o1-mini",
+            temperature=1,
             openai_api_key=self.api_key
         )
 
@@ -78,8 +78,8 @@ class MarkdownRAG:
             self.embeddings
         )
     def describe(self, prompt: str, system_prompt: str = None, temperature: float = None) -> str:
-        llm = self.llm if temperature is None else ChatOpenAI(
-            model_name=self.llm.model_name,
+        llm = ChatOpenAI(
+            model_name="gpt-4o-mini",
             temperature=temperature,
             openai_api_key=self.api_key
         )
