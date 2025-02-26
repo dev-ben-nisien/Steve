@@ -197,8 +197,7 @@ def main():
     rag.create_index()
     
     # Example query
-    diff = "test"
-    print("## Change Review:")
+    diff = sys.stdin.read()
     description = rag.describe(diff)
     print("\n\n# Steve: ")
     answer = rag.query(f"Description: {description} Diff: {diff}")
