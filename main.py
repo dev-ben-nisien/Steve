@@ -1,4 +1,4 @@
-import os
+import os, sys
 from typing import List, Dict, Any
 from pathlib import Path
 
@@ -100,9 +100,9 @@ class MarkdownRAG:
         # Create a new LLM instance with streaming enabled and callback.
         llm = ChatOpenAI(
             model_name="gpt-4o-mini",
-            temperature=temperature if temperature is not None else 1,
+            temperature=0.1,
             openai_api_key=self.api_key,
-            streaming=True,
+            streaming=False,
             callbacks=[StreamingCallbackHandler()]
         )
 
@@ -197,8 +197,7 @@ def main():
     rag.create_index()
     
     # Example query
-    diff = "test"
-    print("## Change Review:")
+    diff = sys.stdin.read()
     description = rag.describe(diff)
     print("\n\n# Steve: ")
     answer = rag.query(f"Description: {description} Diff: {diff}")
