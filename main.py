@@ -148,7 +148,7 @@ class MarkdownRAG:
             has requested to be merged. Do we have existing documentation for this? We write ADRs for technical 
             decisions, is the change significant enough to warrant this?
             If its worth creating an ADR suggest some positive & negative consequences of the decision and trade-offs.
-            An ADR should only have a single topic, so suggest multiple ADRs when addressing multiple topics. However make the details more brief.
+            An ADR should only have a single topic, so suggest multiple ADRs when addressing multiple topics separated by different sub headings. However make the details more brief.
 
 
             Important!: Use Markdown tables where possible. Make the response pretty using all of markdowns features. Use emoji.
