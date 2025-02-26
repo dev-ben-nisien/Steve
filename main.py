@@ -153,7 +153,7 @@ class MarkdownRAG:
 
             Important!: Use Markdown tables where possible. Make the response pretty using all of markdowns features. Use emoji.
             Important!: Keep it consise - so it can be read in seconds.
-            Important!: Do not attempt to generate an entire ADR.
+            Important!: Do not attempt to generate an entire ADR. Do not suggest changes to code.
             Important!: Think critically on the time efficiency when suggesting to write a ADR. Only suggest writing
             and ADR if the change is significant and spending time documenting is worth it. Is it better to spend the time working on features?
             Important!: If according to the git diff documentation has been added, DO NOT suggest creating a new one,
