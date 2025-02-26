@@ -100,7 +100,7 @@ class MarkdownRAG:
         # Create a new LLM instance with streaming enabled and callback.
         llm = ChatOpenAI(
             model_name="gpt-4o-mini",
-            temperature=0.1,
+            temperature=0.3,
             openai_api_key=self.api_key,
             streaming=False,
             callbacks=[StreamingCallbackHandler()]
