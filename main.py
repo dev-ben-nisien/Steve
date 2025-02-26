@@ -173,7 +173,6 @@ class MarkdownRAG:
             {"question": question, "context": "".join([doc.page_content for doc in sources])}
         )
         
-        
         return {
             "answer": response,
             "sources": [
@@ -196,7 +195,7 @@ def main():
     # Example query
     diff = sys.stdin.read()
     description = rag.describe(diff)
-    print("\n\n# Steve: ")
+    print("\n\n# 📚 Steve: ")
     answer = rag.query(f"Description: {description} \nDiff: {diff}")
     output = []
     output.append("\n## Referenced Documentation:")
