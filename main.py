@@ -198,9 +198,9 @@ def main():
     
     # Example query
     diff = "test"
-    print("## Change Description:")
+    print("## Change Review:")
     description = rag.describe(diff)
-    print("\n\n## Steve: ")
+    print("\n\n# Steve: ")
     answer = rag.query(f"Description: {description} Diff: {diff}")
     output = []
     output.append("\n## Referenced Documentation:")
