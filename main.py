@@ -100,7 +100,7 @@ class MarkdownRAG:
         # Create a new LLM instance with streaming enabled and callback.
         llm = ChatOpenAI(
             model_name="gpt-4o-mini",
-            temperature=0.1,
+            temperature=0.3,
             openai_api_key=self.api_key,
             streaming=False,
             callbacks=[StreamingCallbackHandler()]
@@ -139,19 +139,24 @@ class MarkdownRAG:
 
         prompt_template = PromptTemplate(
             template="""
+            Current Documentation: {context}
+
+            Change: {question}
+            
+            Your job:
             You have been provided the description of a change, and the git diff from a PR an engineer
             has requested to be merged. Do we have existing documentation for this? We write ADRs for technical 
             decisions, is the change significant enough to warrant this?
             If its worth creating an ADR suggest some positive & negative consequences of the decision and trade-offs.
+            An ADR should only have a single topic, so suggest multiple ADRs when addressing multiple topics separated by different sub headings. However make the details more brief.
 
-            Change: {question}
 
-            Context: {context}
-            
-            Important!: Keep it consise - so its a very quick read.
-            Important!: Consider the time efficiency when suggesting to write a ADR. Only suggest writing
-            and ADR if the change is significant and spending time documenting is worth it.
-            Important!: If according to the git diff documentation has been added, do not suggest creating a new one,
+            Important!: Use Markdown tables where possible. Make the response pretty using all of markdowns features. Use emoji.
+            Important!: Keep it consise - so it can be read in seconds.
+            Important!: Do not attempt to generate an entire ADR. Do not suggest changes to code.
+            Important!: Think critically on the time efficiency when suggesting to write a ADR. Only suggest writing
+            and ADR if the change is significant and spending time documenting is worth it. Is it better to spend the time working on features?
+            Important!: If according to the git diff documentation has been added, DO NOT suggest creating a new one,
             review the added one(s) to identify gaps in logic.
 
             Answer:""",
@@ -160,22 +165,13 @@ class MarkdownRAG:
 
         retriever = self.vector_store.as_retriever(
             search_type="mmr",
-            search_kwargs={'k': 4, 'lambda_mult': 0.50}
+            search_kwargs={'k': 6, 'lambda_mult': 0.40}
         )
-        
-        # The chain now uses streaming llm from self.llm which already supports streaming.
-        chain = (
-            {
-                "context": retriever,
-                "question": RunnablePassthrough()
-            }
-            | prompt_template
-            | self.llm
-            | StrOutputParser()
-        )
-
-        response = chain.invoke(question)
         sources = retriever.invoke(question)
+        chain = prompt_template | self.llm | StrOutputParser()
+        response = chain.invoke(
+            {"question": question, "context": "".join([doc.page_content for doc in sources])}
+        )
         
         return {
             "answer": response,
@@ -199,8 +195,8 @@ def main():
     # Example query
     diff = sys.stdin.read()
     description = rag.describe(diff)
-    print("\n\n# Steve: ")
-    answer = rag.query(f"Description: {description} Diff: {diff}")
+    print("\n\n# 📚 Steve: ")
+    answer = rag.query(f"Description: {description} \nDiff: {diff}")
     output = []
     output.append("\n## Referenced Documentation:")
     for doc in answer["sources"]:
