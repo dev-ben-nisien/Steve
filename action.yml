@@ -17,10 +17,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up things
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.x"
     - uses: actions/checkout@v4
       with:
         repository: 'dev-ben-nisien/Steve'
@@ -41,6 +37,9 @@ runs:
       id: run_script
       shell: bash
       run: |
+          ls -la
+          ls -la $GITHUB_WORKSPACE
+          cd $GITHUB_WORKSPACE
           OUTPUT=$(git diff origin/main -- | python "./Steve/main.py")
           echo "script_output<<EOF" >> "$GITHUB_OUTPUT"
           echo "$OUTPUT" >> "$GITHUB_OUTPUT"
