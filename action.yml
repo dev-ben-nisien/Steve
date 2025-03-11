@@ -22,7 +22,7 @@ runs:
       shell: bash
       run: |
           ls -a
-          OUTPUT=$(git diff origin/main -- | python "./Steve/main.py")
+          OUTPUT=$(git diff origin/main -- | ./steve.py)
           echo "script_output<<EOF" >> "$GITHUB_OUTPUT"
           echo "$OUTPUT" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
@@ -52,7 +52,7 @@ runs:
           if (existingComment) {
             core.setOutput("commentId", existingComment.id);
           } else {
-            core.setOutput("commendId", "");
+            core.setOutput("commentId", "");
           }
             
     - name: Create PR Comment

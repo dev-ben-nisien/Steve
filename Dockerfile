@@ -7,11 +7,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory to GitHub's default workspace location
-WORKDIR /github/workspace
+WORKDIR /Steve
 
-COPY . ./Steve
+COPY . .
 
-RUN pip install --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir -r ./Steve/requirements.txt
-
+RUN pip install --no-cache-dir -r requirements.txt
+RUN chmod +x steve.py
+ENV PATH="/Steve:${PATH}"
 CMD ["bash"]
