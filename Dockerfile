@@ -9,18 +9,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set the working directory to GitHub's default workspace location
 WORKDIR /github/workspace
 
-# Copy your requirements file from the repository into the image.
-# This assumes your repository contains a "Steve" folder with requirements.txt.
-COPY requirements.txt ./Steve/requirements.txt
+COPY . ./Steve
 
-# Upgrade pip and install Python dependencies
 RUN pip install --upgrade pip setuptools wheel && \
     pip install --no-cache-dir -r ./Steve/requirements.txt
 
-# Optionally, copy the rest of your repository if you want them baked into
-# your container image. In many GitHub Actions workflows the repo is mounted
-# at runtime using actions/checkout so this may be omitted.
-# COPY . .
-
-# Default to an interactive shell so that the container can accept commands
 CMD ["bash"]

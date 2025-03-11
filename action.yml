@@ -17,17 +17,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Is it cached?
-      id: cache-pip
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip
-    - name: Install
-      shell: bash
-      run: |
-        pip install --upgrade pip setuptools wheel
-        pip install -r ./Steve/requirements.txt
     - name: Do stuff
       id: run_script
       shell: bash
