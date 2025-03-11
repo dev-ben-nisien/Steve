@@ -37,7 +37,7 @@ runs:
       id: run_script
       shell: bash
       run: |
-          ls -la $GITHUB_WORKSPACE
+          cd $GITHUB_WORKSPACE
           OUTPUT=$(git diff origin/main -- | python "./Steve/main.py")
           echo "script_output<<EOF" >> "$GITHUB_OUTPUT"
           echo "$OUTPUT" >> "$GITHUB_OUTPUT"
