@@ -17,15 +17,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up things
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.x"
-    - uses: actions/checkout@v4
-      with:
-        repository: 'dev-ben-nisien/Steve'
-        path: ./Steve
-        clean: false
     - name: Is it cached?
       id: cache-pip
       uses: actions/cache@v4
