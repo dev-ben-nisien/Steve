@@ -1,5 +1,6 @@
-use rig::{completion::Prompt, providers::openai};
-pub async fn search(query: String) -> String {
+use rig::providers::openai;
+use rig::streaming::{StreamingPrompt, stream_to_stdout};
+pub async fn search(query: String) -> Result<(), anyhow::Error> {
     let openai_client = openai::Client::from_env();
     let search_agent = openai_client
         .agent("gpt-4o")
@@ -7,8 +8,7 @@ pub async fn search(query: String) -> String {
         .temperature(0.9)
         .build();
 
-    return search_agent
-        .prompt(query)
-        .await
-        .expect("Failed to prompt the agent");
+    let mut stream = search_agent.stream_prompt(&query).await?;
+    stream_to_stdout(search_agent, &mut stream).await?;
+    Ok(())
 }

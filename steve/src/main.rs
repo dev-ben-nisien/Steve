@@ -1,6 +1,8 @@
 use clap::{Parser, Subcommand};
 use dotenv::dotenv;
 use std::io::{self, Read};
+use std::process::Command;
+use std::str;
 mod llm;
 /// STEVE: Search Technical Evidence Very Easy.
 #[derive(Parser, Debug)]
@@ -18,7 +20,7 @@ enum Commands {
     Audit {},
 }
 
-async fn run_search(query: &Option<String>, mut reader: impl Read) -> String {
+async fn run_search(query: &Option<String>, mut reader: impl Read) -> Result<(), anyhow::Error> {
     let query_text = match query {
         Some(q) => q.clone(),
         None => {
@@ -31,15 +33,25 @@ async fn run_search(query: &Option<String>, mut reader: impl Read) -> String {
     };
     return llm::search(query_text).await;
 }
+
+async fn run_audit() -> Result<(), anyhow::Error> {
+    let output = Command::new("git")
+        .arg("diff")
+        .output()
+        .expect("Failed to execute git diff");
+    if output.status.success() {
+        let diff = str::from_utf8(&output.stdout).unwrap().to_string();
+        return llm::search(diff).await;
+    }
+    panic!("Something terrible has occured")
+}
+
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), anyhow::Error> {
     dotenv().ok();
     let cli = Cli::parse();
     match &cli.command {
-        Commands::Search { query } => {
-            let result = run_search(query, io::stdin()).await;
-            println!("Search Result: {}", result)
-        }
-        Commands::Audit {} => println!("Executed audit"),
+        Commands::Search { query } => run_search(query, io::stdin()).await,
+        Commands::Audit {} => run_audit().await,
     }
 }
