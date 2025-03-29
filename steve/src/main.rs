@@ -1,7 +1,7 @@
-mod search;
-
 use clap::{Parser, Subcommand};
+use dotenv::dotenv;
 use std::io::{self, Read};
+mod llm;
 /// STEVE: Search Technical Evidence Very Easy.
 #[derive(Parser, Debug)]
 #[command(name = "steve", version, author, about)]
@@ -18,7 +18,7 @@ enum Commands {
     Audit {},
 }
 
-fn run_search(query: &Option<String>, mut reader: impl Read) -> String {
+async fn run_search(query: &Option<String>, mut reader: impl Read) -> String {
     let query_text = match query {
         Some(q) => q.clone(),
         None => {
@@ -29,14 +29,15 @@ fn run_search(query: &Option<String>, mut reader: impl Read) -> String {
             buffer.trim().to_string()
         }
     };
-    return query_text;
+    return llm::search(query_text).await;
 }
-fn main() {
-    // Parse the command-line arguments
+#[tokio::main]
+async fn main() {
+    dotenv().ok();
     let cli = Cli::parse();
     match &cli.command {
         Commands::Search { query } => {
-            let result = run_search(query, io::stdin());
+            let result = run_search(query, io::stdin()).await;
             println!("Search Result: {}", result)
         }
         Commands::Audit {} => println!("Executed audit"),
