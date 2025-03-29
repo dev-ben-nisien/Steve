@@ -17,7 +17,9 @@ enum Commands {
     /// Search evidence on a given prompt
     Search { query: Option<String> },
     /// Analyize the current branch against main
-    Audit {},
+    Audit,
+    /// A toxic code review
+    Roast,
 }
 
 async fn run_search(query: &Option<String>, mut reader: impl Read) -> Result<(), anyhow::Error> {
@@ -53,5 +55,6 @@ async fn main() -> Result<(), anyhow::Error> {
     match &cli.command {
         Commands::Search { query } => run_search(query, io::stdin()).await,
         Commands::Audit {} => run_audit().await,
+        Commands::Roast {} => run_audit().await,
     }
 }

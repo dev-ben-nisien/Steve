@@ -12,3 +12,4 @@ else
   echo "$EXPORT_LINE" >> "$ZSHRC"
   echo "Export line added to $ZSHRC."
 fi
+cargo b --manifest-path /workspaces/Steve/steve/Cargo.toml
