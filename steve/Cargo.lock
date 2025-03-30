@@ -1339,6 +1339,7 @@ dependencies = [
  "assert_cmd",
  "clap",
  "dotenv",
+ "futures",
  "rig-core",
  "tokio",
 ]

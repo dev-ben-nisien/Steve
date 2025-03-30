@@ -9,7 +9,8 @@
             "request": "launch",
             "name": "Debug",
             "program": "${workspaceFolder}/steve/target/debug/steve",
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "args": "audit"
         }
     ]
 }
