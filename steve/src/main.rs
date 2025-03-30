@@ -33,7 +33,7 @@ async fn run_search(query: &Option<String>, mut reader: impl Read) -> Result<(),
             buffer.trim().to_string()
         }
     };
-    return llm::search(query_text).await;
+    return llm::research(query_text).await;
 }
 
 async fn run_audit() -> Result<(), anyhow::Error> {
@@ -43,7 +43,7 @@ async fn run_audit() -> Result<(), anyhow::Error> {
         .expect("Failed to execute git diff");
     if output.status.success() {
         let diff = str::from_utf8(&output.stdout).unwrap().to_string();
-        return llm::search(diff).await;
+        return llm::prompt(diff).await;
     }
     panic!("Something terrible has occured")
 }
