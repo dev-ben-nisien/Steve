@@ -33,7 +33,7 @@ async fn run_search(query: &Option<String>, mut reader: impl Read) -> Result<(),
             buffer.trim().to_string()
         }
     };
-    return llm::research(query_text).await;
+    return llm::prompt(query_text).await;
 }
 async fn run_prompt(query: &Option<String>, mut reader: impl Read) -> Result<(), anyhow::Error> {
     let query_text = match query {

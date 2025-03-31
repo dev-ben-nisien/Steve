@@ -1,4 +1,7 @@
+use colored::Colorize;
 use futures::StreamExt;
+use indicatif::ProgressBar;
+use rig::completion::Prompt;
 use rig::providers::openai;
 use rig::streaming::{StreamingChoice, StreamingPrompt, stream_to_stdout};
 mod vectors;
@@ -23,11 +26,13 @@ pub async fn extract(diff: String) -> Result<Vec<String>, anyhow::Error> {
         .build();
     let mut buffer = String::new();
     let mut stream = search_agent.stream_prompt(&diff).await?;
+    let pb = ProgressBar::new(200);
+
     while let Some(result) = stream.next().await {
         let choice = result?;
         match choice {
             StreamingChoice::Message(token) => {
-                print!("{}", token);
+                pb.inc(1);
                 buffer.push_str(&token);
             }
             StreamingChoice::ToolCall(_, _, _) => todo!(),
@@ -44,11 +49,16 @@ pub async fn extract(diff: String) -> Result<Vec<String>, anyhow::Error> {
             }
         })
         .collect();
-    println!("Question Count:{}", questions.len());
+    pb.finish_with_message("Done");
+    println!(
+        "\n\n{}{}",
+        "Question Count: ".bold().blue(),
+        questions.len()
+    );
     Ok(questions)
 }
 
-pub async fn research(query: String) -> Result<(), anyhow::Error> {
+pub async fn research(query: String) -> Result<String, anyhow::Error> {
     let openai_client = openai::Client::from_env();
     let vectors = vectors::embed_docs(openai_client.clone()).await?;
     let search_agent = openai_client
@@ -57,7 +67,6 @@ pub async fn research(query: String) -> Result<(), anyhow::Error> {
         .dynamic_context(2, vectors)
         .temperature(0.9)
         .build();
-    let mut stream = search_agent.stream_prompt(&query).await?;
-    stream_to_stdout(search_agent, &mut stream).await?;
-    Ok(())
+    let response = search_agent.prompt(query).await?;
+    Ok(response)
 }
