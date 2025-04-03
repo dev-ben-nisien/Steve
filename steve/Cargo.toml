@@ -2,6 +2,9 @@
 name = "steve"
 version = "0.1.0"
 edition = "2024"
+description = "STEVE: Search Technical Evidence Very Easily"
+repository = "https://github.com/dev-ben-nisien/Steve"
+license = "MIT"
 
 [dependencies]
 anyhow = "1.0.97"
