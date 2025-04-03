@@ -1,9 +1,0 @@
-langchain 
-langchain-community
-langchain-openai 
-docarray
-faiss-cpu
-python-dotenv
-unstructured
-markdown
-numpy
