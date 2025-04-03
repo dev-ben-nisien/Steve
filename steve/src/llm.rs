@@ -85,7 +85,7 @@ pub async fn roast() -> Result<(), anyhow::Error> {
     let openai_client = openai::Client::from_env();
     let search_agent = openai_client
         .agent("gpt-4o")
-        .preamble("Make fun of anything given below. Be insulting")
+        .preamble("Do a code review of the current changes. Be brutally honest and insulting.")
         .temperature(0.9)
         .build();
 
