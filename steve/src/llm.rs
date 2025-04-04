@@ -3,7 +3,8 @@ use futures::StreamExt;
 use indicatif::ProgressBar;
 use rig::completion::Prompt;
 use rig::providers::openai;
-use rig::streaming::{StreamingChoice, StreamingPrompt, stream_to_stdout};
+use rig::streaming::{StreamingChoice, StreamingPrompt};
+use termimad::MadSkin;
 
 use crate::git;
 mod vectors;
@@ -68,12 +69,13 @@ pub async fn search(query: String) -> Result<(), anyhow::Error> {
     let vectors = vectors::embed_docs().await?;
     let search_agent = openai_client
         .agent("gpt-4o")
-        .preamble("You are a architectural decision records librarian. You have been given the context of the related documentation. Explain this to the user consisely & clearly, make it relevant to the question asked. Feel free to add examples or addition context. But do not stray from the source of truth provided.")
+        .preamble("You are a architectural decision records librarian. You have been given the context of the related documentation. Explain only the most relevant information to the user consisely & clearly, make it relevant to the question asked. Feel free to add examples or addition context. But do not stray from the source of truth provided.")
         .dynamic_context(4, vectors)
         .temperature(1.0)
         .build();
-    let mut stream = search_agent.stream_prompt(&query).await?;
-    stream_to_stdout(search_agent, &mut stream).await?;
+    let response = search_agent.prompt(query).await?;
+    let output = MadSkin::default();
+    output.print_text(&response);
     Ok(())
 }
 pub async fn roast() -> Result<(), anyhow::Error> {
@@ -88,8 +90,8 @@ pub async fn roast() -> Result<(), anyhow::Error> {
         .preamble("Do a code review of the current changes. Be brutally honest and insulting.")
         .temperature(0.9)
         .build();
-
-    let mut stream = search_agent.stream_prompt(&diff).await?;
-    stream_to_stdout(search_agent, &mut stream).await?;
+    let response = search_agent.prompt(diff).await?;
+    let output = MadSkin::default();
+    output.print_text(&response);
     Ok(())
 }

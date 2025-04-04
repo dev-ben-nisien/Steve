@@ -1,5 +1,4 @@
 use anyhow::anyhow;
-use colored::Colorize;
 use rig::{
     Embed,
     embeddings::EmbeddingsBuilder,
@@ -41,8 +40,6 @@ pub async fn embed_docs()
 
     let store = InMemoryVectorStore::from_documents_with_id_f(embeddings, |doc| doc.id.clone());
     let index = store.index(embedding_model);
-
-    println!("\n{}", "Finished Embedding Documents".blue());
     return Ok(index);
 }
 
