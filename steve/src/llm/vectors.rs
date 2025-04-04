@@ -1,8 +1,12 @@
 use anyhow::anyhow;
+use colored::Colorize;
 use rig::{
     embeddings::EmbeddingsBuilder,
     providers::openai::Client,
-    vector_store::in_memory_store::{InMemoryVectorIndex, InMemoryVectorStore},
+    vector_store::{
+        VectorStoreIndex,
+        in_memory_store::{InMemoryVectorIndex, InMemoryVectorStore},
+    },
 };
 use std::{env, path::Path};
 use tokio::fs;
@@ -25,6 +29,10 @@ pub async fn embed_docs(
         .await?;
 
     let store = InMemoryVectorStore::from_documents(embeddings);
+    println!(
+        "\n{}",
+        "Finsihed Embedding Documents".bold().blue().underline()
+    );
     return Ok(store.index(embedding_model));
 }
 

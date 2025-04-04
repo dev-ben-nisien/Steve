@@ -4,7 +4,7 @@ use std::str;
 
 pub async fn run_audit() -> Result<(), anyhow::Error> {
     let diff = git::get_diff();
-    let questions = llm::extract(diff).await?;
+    let questions = llm::extract(&diff).await?;
     let mut answers = Vec::new();
     println!("\n{}", "Searching Documentation".bold().blue().underline());
     for question in questions {
