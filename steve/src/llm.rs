@@ -4,7 +4,6 @@ use indicatif::ProgressBar;
 use rig::completion::Prompt;
 use rig::providers::openai;
 use rig::streaming::{StreamingChoice, StreamingPrompt, stream_to_stdout};
-use rig::vector_store::VectorStoreIndex;
 
 use crate::git;
 mod vectors;
@@ -53,12 +52,12 @@ pub async fn extract(diff: &String) -> Result<Vec<String>, anyhow::Error> {
 
 pub async fn research(query: String) -> Result<String, anyhow::Error> {
     let openai_client = openai::Client::from_env();
-    let vectors = vectors::embed_docs(openai_client.clone()).await?;
+    let vectors = vectors::embed_docs().await?;
     let search_agent = openai_client
         .agent("gpt-4o")
         .preamble("Does the attached context answer the the provided question? Response with one of the three following options only. 'Answers:Present' or 'Answers:Missing'")
-        .dynamic_context(1, vectors)
-        .temperature(0.9)
+        .dynamic_context(4, vectors)
+        .temperature(1.0)
         .build();
     let response = search_agent.prompt(query).await?;
     Ok(response)
@@ -66,12 +65,12 @@ pub async fn research(query: String) -> Result<String, anyhow::Error> {
 pub async fn search(query: String) -> Result<(), anyhow::Error> {
     println!("{}", "\nBeginning Search...\n".bold().blue().underline());
     let openai_client = openai::Client::from_env();
-    let vectors = vectors::embed_docs(openai_client.clone()).await?;
+    let vectors = vectors::embed_docs().await?;
     let search_agent = openai_client
         .agent("gpt-4o")
-        .preamble("You are a architectural decision records librarian. You have been given the context of the related documentation. Explain this to the user consisely & clearly, make it more relevant to the question asked. Feel free to add examples or addition context. But do not stray from the source of truth provided.")
-        .dynamic_context(1, vectors)
-        .temperature(0.9)
+        .preamble("You are a architectural decision records librarian. You have been given the context of the related documentation. Explain this to the user consisely & clearly, make it relevant to the question asked. Feel free to add examples or addition context. But do not stray from the source of truth provided.")
+        .dynamic_context(4, vectors)
+        .temperature(1.0)
         .build();
     let mut stream = search_agent.stream_prompt(&query).await?;
     stream_to_stdout(search_agent, &mut stream).await?;
