@@ -1,6 +1,6 @@
 [package]
 name = "steve"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 description = "STEVE: Search Technical Evidence Very Easily"
 repository = "https://github.com/dev-ben-nisien/Steve"
@@ -14,7 +14,7 @@ colored = "3.0.0"
 dotenv = "0.15.0"
 futures = "0.3.31"
 indicatif = "0.17.11"
-rig-core = "0.10.0"
+rig-core = "0.11.0"
 serde = "1.0.219"
 termimad = "0.31.2"
 tokio = { version = "1.44.1", features = ["macros", "rt-multi-thread"] }

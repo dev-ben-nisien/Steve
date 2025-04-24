@@ -11,8 +11,8 @@ use tokio::fs;
 
 #[derive(Clone, Deserialize, Debug, Serialize, Eq, PartialEq, Default)]
 pub struct MarkdownFile {
-    id: String,
-    content: String,
+    pub id: String,
+    pub content: String,
 }
 impl Embed for MarkdownFile {
     fn embed(
@@ -40,6 +40,7 @@ pub async fn embed_docs()
 
     let store = InMemoryVectorStore::from_documents_with_id_f(embeddings, |doc| doc.id.clone());
     let index = store.index(embedding_model);
+    println!("Loaded {} documents\n", index.len());
     return Ok(index);
 }
 
