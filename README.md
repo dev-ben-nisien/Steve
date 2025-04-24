@@ -24,6 +24,7 @@ Create a `.env` file (or copy an existing example) in the project you are workin
 ```dotenv
 OPENAI_API_KEY=<API_TOKEN>
 STEVE_DOCS_PATH=/workspaces/Steve/docs
+STEVE_OPENAI_MODEL=gpt-4o # Optional, defaults to gpt-4o
 ```
 
 ## Usage
